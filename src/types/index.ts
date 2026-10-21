@@ -34,3 +34,12 @@ export interface SfxParams {
   sampleRateReduction: number; // 1 a 16
   masterVolume: number;      // 0 a 1
 }
+
+export interface SoundHistoryItem {
+  id: string;
+  name: string;
+  preset: SfxPreset | 'custom';
+  timestamp: number;
+  params: SfxParams;
+  duration: number;
+}

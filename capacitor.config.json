@@ -1,0 +1,8 @@
+{
+  "appId": "com.gardenghi.gardensfxlab",
+  "appName": "Garden SFX Lab",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Garden SFX Lab</string>
+    <string name="title_activity_main">Garden SFX Lab</string>
+    <string name="package_name">com.gardenghi.gardensfxlab</string>
+    <string name="custom_url_scheme">com.gardenghi.gardensfxlab</string>
+</resources>
