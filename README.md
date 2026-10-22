@@ -1,6 +1,6 @@
 # 🌿 Garden SFX Lab
 
-> **Gerador Procedural de Efeitos Sonoros Retro & Chiptune para Games (8-bit / 16-bit)** com síntese em tempo real via Web Audio API, presets algorítmicos instantâneos (*sfxr / bfxr* modernizado), osciloscópio dinâmico e exportação em WAV sem compressão.
+> **Gerador Procedural de Efeitos Sonoros Retro & Chiptune para Games (8-bit / 16-bit)** com síntese em tempo real via Web Audio API, presets algorítmicos instantâneos (*sfxr / bfxr* modernizado), osciloscópio dinâmico, exportação/importação de presets em JSON e exportação em WAV sem compressão.
 
 [![Part of GC Studio](https://img.shields.io/badge/Part%20of-GC%20Studio%20%2F%20Garden%20Apps-06B6D4?style=flat-square)](https://github.com/FelipeGardenghiDev/gcstudio)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
@@ -30,7 +30,8 @@ O **Garden SFX Lab** traz o gerador procedural definitivo para a era moderna:
   * Modulação de Frequência e Pitch Envelope (Slides ascendentes e descendentes).
   * Filtros ressonantes (Low-Pass e High-Pass com controle de corte e ressonância).
   * Efeito Lo-Fi / Bitcrush (redução de profundidade de bits de 1 a 16 bits para crocância chiptune).
-* **Osciloscópio em Tempo Real:** Renderização visual da onda sonora gerada em 60 FPS com Canvas 2D.
+* **Osciloscópio & Waveform DSP em Tempo Real:** Renderização visual da onda sonora gerada em 60 FPS com Canvas 2D.
+* **Salvar & Carregar Presets em JSON:** Importe e exporte definições sonoras completas para compartilhar com outros desenvolvedores ou salvar suas bibliotecas de sound design.
 * **Exportação Universal de Áudio:** Download em `.wav` de 8-bit, 16-bit e 24-bit (Little-Endian PCM).
 * **Sinergia Total no GC Studio:**
   * Envia sons com 1 clique para a trilha `track-audio` do [GardenCut](https://github.com/FelipeGardenghiDev/garden-cut).
@@ -39,11 +40,18 @@ O **Garden SFX Lab** traz o gerador procedural definitivo para a era moderna:
 
 ---
 
+## 🚀 Deploy Web & Aplicativo Android (APK)
+
+* **Web App (GitHub Pages):** [felipegardenghidev.github.io/garden-sfx-lab](https://felipegardenghidev.github.io/garden-sfx-lab/)
+* **Download do APK Android:** A cada commit na branch principal, o GitHub Actions compila automaticamente o APK nativo através do pipeline Capacitor + Gradle e disponibiliza o artefato `garden-sfx-lab-debug-apk` para download direto na aba **Actions** do repositório, dispensando o Android Studio na máquina local.
+
+---
+
 ## 🏛️ Arquitetura do Software
 
 ```mermaid
 flowchart TD
-    subgraph Presets ["Presets Algorítmicos"]
+    subgraph Presets ["Presets Algorítmicos & JSON"]
         LASER["Laser / Shoot"]
         JUMP["Jump"]
         COIN["Coin / Pickup"]
@@ -51,6 +59,7 @@ flowchart TD
         POWER["Power-Up"]
         HIT["Hit / Hurt"]
         RANDOM["Procedural Randomizer"]
+        JSON_IN["Import / Export JSON Preset"]
     end
 
     subgraph Synth ["Motor de Síntese Web Audio DSP"]
@@ -68,7 +77,7 @@ flowchart TD
     end
 
     subgraph Destination ["Destinos"]
-        FILE["Download .WAV"]
+        FILE["Download .WAV / .JSON"]
         GARDENCUT["GardenCut Timeline"]
         STREAMDECK["Garden StreamDeck Pad"]
         ENGINE["Godot / Unity / Phaser"]
@@ -89,7 +98,7 @@ flowchart TD
 
 * **Linguagem:** TypeScript 5.8+
 * **Framework:** React 19 + Vite 8
-* **Síntese DSP:** Web Audio API (`AudioContext`, `OscillatorNode`, `BiquadFilterNode`, `AudioWorklet`)
+* **Síntese DSP:** Web Audio API (`AudioContext`, `OscillatorNode`, `BiquadFilterNode`)
 * **Visualização:** HTML5 Canvas 2D
 * **Codificação:** PCM WAV Encoder em TypeScript puro
 

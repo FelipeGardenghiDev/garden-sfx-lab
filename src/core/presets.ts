@@ -186,3 +186,28 @@ export function generatePreset(preset: SfxPreset): SfxParams {
     }
   }
 }
+
+export function exportPresetToJson(params: SfxParams, name = 'garden_sfx_preset'): string {
+  const payload = {
+    version: '1.0',
+    generator: 'Garden SFX Lab',
+    presetName: name,
+    exportedAt: new Date().toISOString(),
+    params
+  };
+  return JSON.stringify(payload, null, 2);
+}
+
+export function parsePresetFromJson(jsonStr: string): SfxParams | null {
+  try {
+    const data = JSON.parse(jsonStr);
+    const candidate = data.params || data;
+    if (typeof candidate.baseFrequency === 'number' && typeof candidate.waveform === 'string') {
+      return {
+        ...DEFAULT_SFX_PARAMS,
+        ...candidate
+      };
+    }
+  } catch {}
+  return null;
+}

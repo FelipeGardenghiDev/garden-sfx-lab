@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { generatePreset } from '../src/core/presets';
+import { generatePreset, exportPresetToJson, parsePresetFromJson, DEFAULT_SFX_PARAMS } from '../src/core/presets';
 import { audioBufferToWav } from '../src/core/wav-exporter';
 import { SfxPreset } from '../src/types';
 
@@ -43,6 +43,18 @@ describe('Garden SFX Lab - Presets & DSP Generator', () => {
     const explosion = generatePreset('explosion');
     expect(explosion.waveform).toBe('noise');
     expect(explosion.filterType).toBe('lowpass');
+  });
+
+  it('exports and parses preset JSON correctly', () => {
+    const custom = { ...DEFAULT_SFX_PARAMS, baseFrequency: 550, waveform: 'sawtooth' as const };
+    const jsonStr = exportPresetToJson(custom, 'test_sound');
+    expect(jsonStr).toContain('Garden SFX Lab');
+    expect(jsonStr).toContain('550');
+
+    const parsed = parsePresetFromJson(jsonStr);
+    expect(parsed).not.toBeNull();
+    expect(parsed?.baseFrequency).toBe(550);
+    expect(parsed?.waveform).toBe('sawtooth');
   });
 });
 

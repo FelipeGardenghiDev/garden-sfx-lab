@@ -13,10 +13,10 @@ import {
   Music2,
   History,
   Trash2,
-  FileAudio
+  FileAudio, FileJson, Upload
 } from 'lucide-react';
 import { SfxParams, SfxPreset, WaveformType, SoundHistoryItem } from './types';
-import { DEFAULT_SFX_PARAMS, generatePreset } from './core/presets';
+import { DEFAULT_SFX_PARAMS, generatePreset, exportPresetToJson, parsePresetFromJson } from './core/presets';
 import { getAudioContext, playSfx, renderSfxBuffer } from './core/sfx-synthesizer';
 import { audioBufferToWav, downloadBlob } from './core/wav-exporter';
 import { Oscilloscope } from './components/Oscilloscope';
@@ -89,6 +89,30 @@ export const App: React.FC = () => {
     }
   };
 
+  const handleExportJson = () => {
+    const jsonStr = exportPresetToJson(params, activePreset);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    downloadBlob(blob, `${activePreset}_preset_${Date.now()}.json`);
+  };
+
+  const handleImportJson = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      const loaded = parsePresetFromJson(text);
+      if (loaded) {
+        setParams(loaded);
+        handlePlay(loaded, file.name.replace('.json', ''));
+      } else {
+        alert('Formato de arquivo JSON de preset inválido.');
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  };
+
   // Pre-load default sound on start
   useEffect(() => {
     const initial = generatePreset('laser');
@@ -139,11 +163,35 @@ export const App: React.FC = () => {
 
           <button
             onClick={() => handleExportWav(params, activePreset)}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm bg-zinc-800 hover:bg-zinc-700 text-zinc-100 border border-zinc-700 transition"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg font-semibold text-sm bg-zinc-800 hover:bg-zinc-700 text-zinc-100 border border-zinc-700 transition"
+            title="Exportar arquivo de áudio WAV 16-bit PCM"
           >
             <Download className="w-4 h-4 text-cyan-400" />
             Export .WAV
           </button>
+
+          <button
+            onClick={handleExportJson}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg font-semibold text-sm bg-zinc-800 hover:bg-zinc-700 text-amber-300 border border-zinc-700 transition"
+            title="Exportar parâmetros em arquivo JSON"
+          >
+            <FileJson className="w-4 h-4" />
+            Salvar JSON
+          </button>
+
+          <label
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg font-semibold text-sm bg-zinc-800 hover:bg-zinc-700 text-purple-300 border border-zinc-700 transition cursor-pointer"
+            title="Importar preset em JSON"
+          >
+            <Upload className="w-4 h-4" />
+            <span>Abrir JSON</span>
+            <input
+              type="file"
+              accept=".json"
+              onChange={handleImportJson}
+              className="hidden"
+            />
+          </label>
         </div>
       </header>
 
@@ -534,3 +582,5 @@ export const App: React.FC = () => {
 };
 
 export default App;
+
+
